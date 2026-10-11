@@ -64,24 +64,7 @@ copy-ssh-key: ## Copy public ssh key to steamdeck
 
 deploy-steamdeck: ## Deploy plugin build to steamdeck
 	@echo "+ $@"
-	@ssh $(DECK_USER)@$(DECK_HOST) -p $(DECK_PORT) -i $(DECK_KEY) \
- 		'chmod -v 755 $(DECK_HOME)/homebrew/plugins/ && mkdir -p $(DECK_HOME)/homebrew/plugins/$(PLUGIN_FOLDER)'
-	@rsync -azp --delete --progress -e "ssh -p $(DECK_PORT) -i $(DECK_KEY)" \
-		--chmod=Du=rwx,Dg=rx,Do=rx,Fu=rwx,Fg=rx,Fo=rx \
-		--exclude='.git/' \
-		--exclude='.github/' \
-		--exclude='.vscode/' \
-		--exclude='node_modules/' \
-		--exclude='.pnpm-store/' \
-		--exclude='src/' \
-		--exclude='*.log' \
-		--exclude='.gitignore' . \
-		--exclude='.idea' . \
-		--exclude='.env' . \
-		--exclude='Makefile' . \
- 		./ $(DECK_USER)@$(DECK_HOST):$(DECK_HOME)/homebrew/plugins/$(PLUGIN_FOLDER)/
-	@ssh $(DECK_USER)@$(DECK_HOST) -p $(DECK_PORT) -i $(DECK_KEY) \
- 		'chmod -v 755 $(DECK_HOME)/homebrew/plugins/'
+	@bash ./scripts/deploy-steamdeck.sh
 
 restart-decky: ## Restart Decky on remote steamdeck
 	@echo "+ $@"
@@ -90,8 +73,7 @@ restart-decky: ## Restart Decky on remote steamdeck
 	@echo -e '\033[0;32m+ all is good, restarting Decky...\033[0m'
 
 deploy: ## Deploy code to steamdeck and restart Decky
-	@$(MAKE) deploy-steamdeck
-	@$(MAKE) restart-decky
+	@bash ./scripts/deploy-steamdeck.sh --restart
 
 it: ## Build all code, deploy it to steamdeck, restart Decky
 	@$(MAKE) build deploy
