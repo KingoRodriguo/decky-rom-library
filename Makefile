@@ -5,7 +5,7 @@ endif
 
 SHELL=bash
 
-.PHONY: help vendor env init update-frontend-lib build-front build ssh-keygen copy-ssh-key deploy-steamdeck restart-decky deploy it cleanup uninstall-plugin
+.PHONY: help vendor env init update-lib build-front build ssh-keygen copy-ssh-key deploy-steamdeck restart-decky deploy it cleanup uninstall-plugin
 
 help: ## Display available tasks
 	@echo "+ $@"
